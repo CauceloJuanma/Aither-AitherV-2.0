@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a" />
+  <g transform="translate(60,60)">
+    <rect width="1080" height="510" rx="24" fill="#06b6d4" />
+    <text x="540" y="260" font-size="48" font-family="Arial, Helvetica, sans-serif" fill="#fff" text-anchor="middle">Aither — Monitor de Pacientes</text>
+    <text x="540" y="320" font-size="28" font-family="Arial, Helvetica, sans-serif" fill="#fff" text-anchor="middle">Monitorización clínica en tiempo real</text>
+  </g>
+</svg>

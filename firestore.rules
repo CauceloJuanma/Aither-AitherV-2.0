@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Función auxiliar para verificar si el usuario es admin
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Función auxiliar para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Función auxiliar para verificar si el email del documento coincide con el del usuario
+    function emailMatches() {
+      return isAuthenticated() &&
+             resource != null &&
+             resource.data.email == request.auth.token.email;
+    }
+
+    // Función auxiliar para verificar si el documento es una entrada de whitelist para este usuario
+    function isWhitelistForUser() {
+      return isAuthenticated() &&
+             resource != null &&
+             resource.data.email == request.auth.token.email;
+    }
+
+    // Reglas para la colección de usuarios
+    match /users/{userId} {
+      // Lectura: Solo usuarios autenticados pueden leer
+      // - Su propio documento
+      // - Documentos que tengan su email (para account linking)
+      // - O si son admin, pueden leer todos
+      allow read: if isAuthenticated() &&
+                     (request.auth.uid == userId ||
+                      emailMatches() ||
+                      isAdmin());
+
+      // Creación: Solo durante el login con Google (por el usuario mismo)
+      // O por admins
+      allow create: if isAuthenticated() &&
+                       (request.auth.uid == userId || isAdmin());
+
+      // Actualización: Solo el usuario mismo puede actualizar su documento
+      // O puede actualizar documentos que tengan su email (account linking)
+      // O los admins pueden actualizar cualquiera
+      allow update: if isAuthenticated() &&
+                       (request.auth.uid == userId ||
+                        emailMatches() ||
+                        isAdmin());
+
+      // Eliminación: Solo admins
+      allow delete: if isAdmin();
+    }
+
+    // Permitir que usuarios autenticados consulten la colección users
+    // para verificar whitelist durante Google Auth
+    match /users/{userId} {
+      allow list: if isAuthenticated();
+    }
+  }
+}

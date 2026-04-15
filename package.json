@@ -1,0 +1,49 @@
+{
+  "name": "aither",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "create-admin": "tsx scripts/create-admin.ts",
+    "create-admin-auto": "tsx scripts/create-admin-auto.ts"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "@tanstack/react-query": "^5.90.11",
+    "better-sqlite3": "^12.4.1",
+    "dom-to-image-more": "^3.7.2",
+    "firebase": "^12.5.0",
+    "firebase-admin": "^13.8.0",
+    "framer-motion": "^12.23.25",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.552.0",
+    "next": "^16.2.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "recharts": "^3.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/html2canvas": "^0.5.35",
+    "@types/node": "^20",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "babel-plugin-react-compiler": "1.0.0",
+    "baseline-browser-mapping": "^2.8.32",
+    "dotenv": "^17.2.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "tailwindcss": "^4",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
+  }
+}
