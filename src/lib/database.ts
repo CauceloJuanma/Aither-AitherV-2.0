@@ -31,7 +31,7 @@ interface UnifiedDatabase {
  */
 function getLocalDatabase(): Database.Database {
   if (!localDb) {
-    const dbPath = path.join(process.cwd(), 'app_1mesfinal2.db');
+    const dbPath = path.join(process.cwd(), 'app_1mesfinal3.db');
 
     localDb = new Database(dbPath, {
       readonly: false,

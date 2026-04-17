@@ -533,17 +533,19 @@ export default function HomePage() {
               Administrar usuarios
             </button>
           )}
+
+          {/* Botón de predicción de IA */}
+          {(
+            <button
+              onClick={() => router.push('/predecir')}
+              className="w-full sm:w-auto px-4 md:px-6 py-2.5 bg-sky-500 text-white rounded-lg hover:bg-sky-600 hover:shadow-md transition-all duration-200 font-semibold text-xs md:text-sm"
+            >
+              Predecir
+            </button>
+          )}
         </div>
 
-        {/* Botón de predicción de IA */}
-        {(
-          <button
-            onClick={() => router.push('/predecir')}
-            className="w-full sm:w-auto px-4 md:px-6 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 hover:shadow-md transition-all duration-200 font-semibold text-xs md:text-sm"
-          >
-            Predecir
-          </button>
-        )}
+        
 
         {/* Barra de búsqueda y filtros */}
         <Card>
