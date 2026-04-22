@@ -104,7 +104,7 @@ sudo nano /etc/nginx/sites-available/aither
 ```bash
 server {
     listen 80;
-    server_name tu-dominio.com;
+    server_name aither.com;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -119,7 +119,7 @@ server {
 
 ##### 4.3 Activaer servidor
 ```bash
-sudo ln -s /etc/nginx/sites-available/nextjs /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/aither /etc/nginx/sites-enabled/
 ```
 
 ##### 4.4 Probar configuración
