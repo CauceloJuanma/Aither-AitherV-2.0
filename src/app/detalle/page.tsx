@@ -9,8 +9,9 @@ import { QuestionnaireTab } from '@/components/detalle/tabs/QuestionnaireTab';
 import { PeakFlowTab } from '@/components/detalle/tabs/PeakFlowTab';
 import { ActivityTab } from '@/components/detalle/tabs/ActivityTab';
 import { SleepTab } from '@/components/detalle/tabs/SleepTab';
+import { SoundTab } from '@/components/detalle/tabs/SoundTab';
 // TODO: Descomentar cuando se necesite el tab de Correlaciones
-// import { CorrelationsTab } from '@/components/detalle/tabs/CorrelationsTab';
+import { CorrelationsTab } from '@/components/detalle/tabs/CorrelationsTab';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
@@ -404,6 +405,26 @@ export default function DetallePage() {
   // Los promedios del cuestionario (avgFatiga, avgDisnea, avgTos, avgSuenoCuest, avgAnimo, avgOpresion)
   // ahora vienen de processedData
 
+
+  const correlacionEficienciaSueno = correlacionesClinicas.length > 0
+  ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.eficienciaSueno || 0), 0) / correlacionesClinicas.length)
+    : 0;
+  const correlacionSpo2 = correlacionesClinicas.length > 0
+    ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.spo2 || 0), 0) / correlacionesClinicas.length)
+    : 0;
+  const correlacionPicoFlujo = correlacionesClinicas.length > 0
+    ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.picoFlujo || 0), 0) / correlacionesClinicas.length)
+    : 0;
+  const correlacionPM25 = correlacionesClinicas.length > 0
+    ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.pm25 || 0), 0) / correlacionesClinicas.length)
+    : 0;
+  const correlacionMinutosActivos = correlacionesClinicas.length > 0
+    ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.minutosActivos || 0), 0) / correlacionesClinicas.length)
+    : 0;
+  const correlacionHRV = correlacionesClinicas.length > 0
+    ? Math.round(correlacionesClinicas.reduce((sum, d) => sum + (d.hrv || 0), 0) / correlacionesClinicas.length)
+    : 0;
+
   // Crear array de datos del cuestionario con valores actuales (último registro)
   const ultimoCuestionario = cuestionarioHistorico.length > 0
     ? cuestionarioHistorico[cuestionarioHistorico.length - 1]
@@ -649,6 +670,11 @@ export default function DetallePage() {
       avgTos,
       avgAnimo,
       avgOpresion,
+      correlacionSpo2,
+      correlacionPicoFlujo,
+      correlacionPM25,
+      correlacionMinutosActivos,
+      correlacionHRV,
     };
 
     // Llamar al servicio de PDF
@@ -835,18 +861,19 @@ export default function DetallePage() {
 
               {/* Tabs */}
               <Tabs defaultValue="resumen" className="space-y-6">
-            <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-3 bg-white p-2 rounded-xl shadow-md border border-gray-200">
+            <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-2 bg-white p-1.5 rounded-xl shadow-md border border-gray-200">
               {/* TODO: 'correlaciones' ocultado temporalmente - revisar en el futuro */}
-              {['resumen', 'aire1', 'cuestionario', 'pico', 'actividad', 'sueno'].map(
+              {['resumen', 'correlaciones', 'aire1', 'cuestionario', 'pico', 'actividad', 'sueno', 'sonidos'].map(
                 (tab) => {
                   const labels: Record<string, string> = {
                     resumen: 'Resumen',
-                    // correlaciones: 'Correlaciones', // TODO: ocultado temporalmente
+                    correlaciones: 'Correlaciones', // TODO: ocultado temporalmente
                     aire1: 'Aire Interior',
                     cuestionario: 'Cuestionario',
                     pico: 'Pico Flujo',
                     actividad: 'Actividad',
                     sueno: 'Sueño',
+                    sonidos: 'Sonidos',
                   };
 
                   return (
@@ -854,7 +881,7 @@ export default function DetallePage() {
                       key={tab}
                       value={tab}
                       className="
-                        px-4 py-3 rounded-lg font-semibold text-sm
+                        px-2 py-2 rounded-lg font-semibold text-xs
                         transition-all duration-300 ease-out
                         data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600
                         data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105
@@ -862,6 +889,7 @@ export default function DetallePage() {
                         data-[state=inactive]:hover:bg-gray-100 data-[state=inactive]:hover:text-gray-900
                         hover:shadow-md cursor-pointer
                         focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2
+                        whitespace-nowrap
                       "
                     >
                       {labels[tab]}
@@ -908,14 +936,13 @@ export default function DetallePage() {
              * El componente completo está en:
              * src/components/detalle/tabs/CorrelationsTab.tsx
              */}
-            {/*
+            
             <TabsContent value="correlaciones">
               <CorrelationsTab
                 clinicalData={correlacionesClinicas}
                 activityData={correlacionData}
               />
             </TabsContent>
-            */}
 
           {/* Calidad de Aire 1 Tab - Refactorizado con SOLID */}
           <TabsContent value="aire1">
@@ -974,6 +1001,11 @@ export default function DetallePage() {
               avgTasaRespiratoria={avgTasaRespiratoria}
               avgTimeInBed={avgTimeInBed}
             />
+          </TabsContent>
+
+          {/* Sonidos Tab */}
+          <TabsContent value="sonidos">
+            <SoundTab data={sonidosData} />
           </TabsContent>
 
 

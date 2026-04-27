@@ -39,6 +39,14 @@ export interface ReportMetrics {
   avgTos: number;
   avgAnimo: number;
   avgOpresion: number;
+
+  // Correlations
+  correlacionEficienciaSueno?: number;
+  correlacionSpo2?: number;
+  correlacionPicoFlujo?: number;
+  correlacionPM25?: number;
+  correlacionMinutosActivos?: number;
+  correlacionHRV?: number;
 }
 
 /**
@@ -288,6 +296,24 @@ export class PdfService implements IPdfService {
       `Disnea: ${metrics.avgDisnea}/5`,
       `Tos: ${metrics.avgTos}/5`,
       `Ánimo: ${metrics.avgAnimo}/5`,
+    ]);
+
+    //yPosition += boxHeight + 6;
+
+    // Cuadro 5: Correlaciones Clínicas
+    createMetricBox(20, yPosition, boxWidth, boxHeight, 'CORRELACIONES CLÍNICAS', [
+      `Eficiencia Sueño: ${metrics.correlacionEficienciaSueno || 0}%`,
+      `SpO₂: ${metrics.correlacionSpo2 || 0}%`,
+      `Pico Flujo: ${metrics.correlacionPicoFlujo || 0} L/min`,
+      `PM2.5: ${metrics.correlacionPM25 || 0} µg/m³`,
+    ]);
+
+    // Cuadro 6: Actividad y HRV
+    createMetricBox(20 + boxWidth + boxGap, yPosition, boxWidth, boxHeight, 'ACTIVIDAD Y HRV', [
+      `Minutos Activos: ${metrics.correlacionMinutosActivos || 0} min`,
+      `HRV: ${metrics.correlacionHRV || 0} ms`,
+      `Pasos: ${metrics.avgPasos.toLocaleString()}`,
+      `FC: ${metrics.avgFrecuenciaCardiaca} bpm`,
     ]);
 
     yPosition += boxHeight + 10;
