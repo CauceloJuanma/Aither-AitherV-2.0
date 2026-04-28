@@ -173,4 +173,29 @@ sudo systemctl status tailscaled
 ```
 
 
+## Actualizar repositorio en caso de actualizar a una nueva versión de producción
 
+### 1. Entrar al directorio donde está el proyecto
+```bash
+cd REPOSITORIO
+```
+
+### 2. Actualizar a última versión de git
+```bash
+git fetch
+git reset --hard origin/main
+```
+
+### 3. Compilar aplicación
+```bash
+npm install # Si se han modificado dependencias
+npm run build
+```
+
+### 4. Reiniciar el servicio
+```bash
+pm2 restart aither
+```
+
+### 5. Comprobar actualización
+Se puede comprobar o bien en http://localhost:3000 en el propio servidor o accediendo desde la VPN de Tailscale desde otra máquina
