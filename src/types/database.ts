@@ -213,6 +213,12 @@ export interface Sonidos {
   [key: string]: unknown;
 }
 
+export interface Visitas {
+  id: number;
+  usuario_id: number;
+  fecha: string;
+}
+
 // Tipo para datos completos de un usuario con telemonitorización
 export interface UsuarioCompleto extends Usuario {
   telemonitorizaciones?: TelemonitorizacionCompleta[];
