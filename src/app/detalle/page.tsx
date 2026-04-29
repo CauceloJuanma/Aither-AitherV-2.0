@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/detalle/Header';
 import PatientCards from '@/components/detalle/PatientCards';
@@ -18,6 +18,7 @@ import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Navbar from '@/components/auth/Navbar';
 import DemographicPanel from '@/components/detalle/DemographicPanel';
 import { usePaciente } from '@/hooks/usePaciente';
+import { useVisitas } from '@/hooks/useVisitas';
 import { processTelemonitoringData } from '@/lib/telemonitoringDataProcessor';
 import { pdfService, type PatientInfo, type ReportMetrics } from '@/services/detalle/pdfService';
 
@@ -84,6 +85,9 @@ export default function DetallePage() {
   // Obtener datos del paciente desde la BD
   const { paciente, loading: loadingPaciente, error: errorPaciente } = usePaciente(patientId);
 
+  //Obtener tosas las visitas hospitalarias
+  const { visitas: visitasDB, loading: loadingVisitas, error: errorVisitas } = useVisitas();
+
   // Guardar filtros en localStorage cuando cambien
   useEffect(() => {
     localStorage.setItem('dateRange', dateRange);
@@ -135,6 +139,15 @@ export default function DetallePage() {
     // Si no hay pacientes seleccionados, redirigir a la página principal
     router.push('/');
   }, [router]);
+
+  const visitasSeleccionadas = useMemo(() => {
+      if (!visitasDB) return [];
+  
+      return visitasDB.filter(v =>
+        selectedPatients.includes(v.usuario_id.toString())
+      );
+    }, [visitasDB, selectedPatients]);
+  
 
   const handleCustomDateChange = (startDate: string, endDate: string) => {
     setCustomStartDate(startDate);
@@ -921,6 +934,7 @@ export default function DetallePage() {
                 avgBreathingRate={avgBreathingRate}
                 avgHRVdailyRmssd={avgHRVdailyRmssd}
                 cuestionarioHistorico={cuestionarioHistorico}
+                visitasSeleccionadas={visitasSeleccionadas}
               />
             </TabsContent>
 
@@ -946,7 +960,10 @@ export default function DetallePage() {
 
           {/* Calidad de Aire 1 Tab - Refactorizado con SOLID */}
           <TabsContent value="aire1">
-            <AirQualityTab data={calidadAire1Data} />
+            <AirQualityTab 
+            data={calidadAire1Data}
+            visitasSeleccionadas={visitasSeleccionadas}
+            />
           </TabsContent>
 
           {/* Cuestionario Tab - Refactorizado con SOLID */}
@@ -962,6 +979,7 @@ export default function DetallePage() {
                 animo: avgAnimo,
                 opresion: avgOpresion,
               }}
+              visitasSeleccionadas={visitasSeleccionadas}
             />
           </TabsContent>
 
@@ -972,6 +990,7 @@ export default function DetallePage() {
               avgPeakFlow={avgPicoFlujo}
               latestAverage={ultimoPicoFlujoPromedio}
               bestValue={mejorPicoFlujo}
+              visitasSeleccionadas={visitasSeleccionadas}
             />
           </TabsContent>
 
@@ -986,6 +1005,7 @@ export default function DetallePage() {
               avgSpo2Actividad={avgSpo2Actividad}
               avgRestingHeartRate={avgRestingHeartRate}
               avgHRVdailyRmssd={avgHRVdailyRmssd}
+              visitasSeleccionadas={visitasSeleccionadas}
             />
           </TabsContent>
 
@@ -1000,12 +1020,16 @@ export default function DetallePage() {
               avgFrecuenciaCardiacaSueno={avgFrecuenciaCardiacaSueno}
               avgTasaRespiratoria={avgTasaRespiratoria}
               avgTimeInBed={avgTimeInBed}
+              visitasSeleccionadas={visitasSeleccionadas}
             />
           </TabsContent>
 
           {/* Sonidos Tab */}
           <TabsContent value="sonidos">
-            <SoundTab data={sonidosData} />
+            <SoundTab 
+              data={sonidosData} 
+              visitasSeleccionadas={visitasSeleccionadas}
+            />
           </TabsContent>
 
 

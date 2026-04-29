@@ -45,6 +45,11 @@ export interface SoundTabProps {
    * Sound data array
    */
   data: SoundData[];
+
+  /**
+   * Selected visits to show reference lines on charts
+   */
+  visitasSeleccionadas?: { fecha: string }[];
 }
 
 /**
@@ -58,7 +63,7 @@ export interface SoundTabProps {
  * <SoundTab data={sonidosData} />
  * ```
  */
-export function SoundTab({ data }: SoundTabProps) {
+export function SoundTab({ data, visitasSeleccionadas }: SoundTabProps) {
   // Calculate averages for voice parameters
   const avgDuracionFrase =
     data.length > 0
@@ -337,6 +342,12 @@ export function SoundTab({ data }: SoundTabProps) {
           height={300}
           emptyMessage="Sin datos de duración de frase"
           emptyIcon="🗣️"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       )}
 
@@ -351,6 +362,12 @@ export function SoundTab({ data }: SoundTabProps) {
           height={300}
           emptyMessage="Sin datos de pitch"
           emptyIcon="🎵"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       )}
 
@@ -363,10 +380,18 @@ export function SoundTab({ data }: SoundTabProps) {
           chartType="line"
           series={[{ dataKey: 'hnr', name: 'HNR (dB)', stroke: '#14b8a6', strokeWidth: 2 }]}
           yAxisDomain={[0, 20]}
-          referenceLines={[{ y: 10, stroke: '#f59e0b', strokeDasharray: '5 5', label: 'Umbral: 10dB' }]}
+          referenceLines={[{ y: 10, stroke: '#f59e0b', strokeDasharray: '5 5', label: 'Umbral: 10dB' },
+            ...(visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || [])
+          ]}
           height={300}
           emptyMessage="Sin datos de HNR"
           emptyIcon="📊"
+          
         />
       )}
 
@@ -381,6 +406,12 @@ export function SoundTab({ data }: SoundTabProps) {
           height={300}
           emptyMessage="Sin datos de tos"
           emptyIcon="😷"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       )}
 
@@ -395,6 +426,12 @@ export function SoundTab({ data }: SoundTabProps) {
           height={300}
           emptyMessage="Sin datos de energía"
           emptyIcon="⚡"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       )}
 
@@ -409,6 +446,12 @@ export function SoundTab({ data }: SoundTabProps) {
           height={300}
           emptyMessage="Sin datos de centroide"
           emptyIcon="📈"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       )}
 

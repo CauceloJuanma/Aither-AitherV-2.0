@@ -36,6 +36,11 @@ export interface QuestionnaireTabProps {
     animo: number;
     opresion: number;
   };
+
+  /**
+   * Selected visits for reference lines in charts
+   */
+  visitasSeleccionadas?: { fecha: string; }[]; 
 }
 
 /**
@@ -53,7 +58,7 @@ export interface QuestionnaireTabProps {
  * />
  * ```
  */
-export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTabProps) {
+export function QuestionnaireTab({ data, questions, averages, visitasSeleccionadas }: QuestionnaireTabProps) {
   return (
     <div className="space-y-4">
       {/* Main Info Card */}
@@ -112,7 +117,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'fatiga', name: 'Fatiga', stroke: '#ef4444', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.fatiga, label: `Promedio: ${formatChartNumber(averages.fatiga)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.fatiga, label: `Promedio: ${formatChartNumber(averages.fatiga)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+        ]}
           emptyIcon="📊"
         />
 
@@ -124,7 +139,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'disnea', name: 'Disnea', stroke: '#f59e0b', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.disnea, label: `Promedio: ${formatChartNumber(averages.disnea)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.disnea, label: `Promedio: ${formatChartNumber(averages.disnea)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+        ]}
           emptyIcon="💨"
         />
 
@@ -136,7 +161,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'tos', name: 'Tos', stroke: '#eab308', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.tos, label: `Promedio: ${formatChartNumber(averages.tos)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.tos, label: `Promedio: ${formatChartNumber(averages.tos)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+          ]}
           emptyIcon="🤧"
         />
 
@@ -148,7 +183,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'sueno', name: 'Sueño', stroke: '#10b981', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.sueno, label: `Promedio: ${formatChartNumber(averages.sueno)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.sueno, label: `Promedio: ${formatChartNumber(averages.sueno)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+          ]}
           emptyIcon="💊"
         />
 
@@ -160,7 +205,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'animo', name: 'Ánimo', stroke: '#3b82f6', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.animo, label: `Promedio: ${formatChartNumber(averages.animo)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.animo, label: `Promedio: ${formatChartNumber(averages.animo)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+          ]}
           emptyIcon="🫁"
         />
 
@@ -172,7 +227,17 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           chartType="line"
           series={[{ dataKey: 'opresion', name: 'Opresión', stroke: '#8b5cf6', strokeWidth: 2 }]}
           yAxisDomain={[0, 5]}
-          referenceLines={[{ y: averages.opresion, label: `Promedio: ${formatChartNumber(averages.opresion)}`, stroke: '#94a3b8' }]}
+          referenceLines={[
+            { 
+              y: averages.opresion, label: `Promedio: ${formatChartNumber(averages.opresion)}`, stroke: '#94a3b8' 
+            },
+            ...visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })) || []
+          ]}
           emptyIcon="💜"
         />
       </div>
@@ -197,6 +262,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'errorPromedio', name: 'Error Promedio', stroke: '#8b5cf6', strokeWidth: 2 }]}
           yAxisDomain={[0, 'auto' as const]}
           emptyIcon="🎯"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
 
         <ChartCard
@@ -207,6 +278,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'errorMaximo', name: 'Error Máximo', stroke: '#ef4444', strokeWidth: 2 }]}
           yAxisDomain={[0, 'auto' as const]}
           emptyIcon="❌"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
 
@@ -220,6 +297,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'suavidad', name: 'Suavidad', stroke: '#10b981', strokeWidth: 2 }]}
           height={200}
           emptyIcon="✨"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
 
         <ChartCard
@@ -230,6 +313,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'circularidad', name: 'Circularidad', stroke: '#3b82f6', strokeWidth: 2 }]}
           height={200}
           emptyIcon="⭕"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
 
@@ -243,6 +332,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'areaCircle', name: 'Tamaño', stroke: '#f59e0b', strokeWidth: 2 }]}
           height={200}
           emptyIcon="📏"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
 
         <ChartCard
@@ -253,6 +348,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'excentricidad', name: 'Excentricidad', stroke: '#ec4899', strokeWidth: 2 }]}
           height={200}
           emptyIcon="🔄"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
 
@@ -266,6 +367,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'desviacion', name: 'Desviación', stroke: '#6366f1', strokeWidth: 2 }]}
           height={200}
           emptyIcon="🎯"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
 
         <ChartCard
@@ -277,6 +384,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           height={200}
           tooltipFormatter={createFormatterWithUnit('s')}
           emptyIcon="⏱️"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
 
@@ -290,6 +403,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'variabilidadStd', name: 'D.E. Variabilidad', stroke: '#f97316', strokeWidth: 2 }]}
           height={200}
           emptyIcon="📊"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
 
         <ChartCard
@@ -300,6 +419,12 @@ export function QuestionnaireTab({ data, questions, averages }: QuestionnaireTab
           series={[{ dataKey: 'variabilidadMedia', name: 'Media Variabilidad', stroke: '#84cc16', strokeWidth: 2 }]}
           height={200}
           emptyIcon="📈"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
     </div>

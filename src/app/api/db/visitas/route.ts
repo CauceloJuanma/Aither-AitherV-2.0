@@ -4,13 +4,12 @@ import type { Visitas } from '@/types/database';
 import { requireAuth, unauthorizedResponse } from '@/lib/auth-helpers';
 
 /**
- * GET /api/db/usuarios/[id]/visitas
- * Obtiene todas las visitas hospitalarias de un usuario específico
+ * GET /api/db/visitas
+ * Obtiene todas las visitas hospitalarias
  * REQUIERE AUTENTICACIÓN
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
 ) {
   // Verificar autenticación
   const userId = await requireAuth(request);
@@ -19,12 +18,9 @@ export async function GET(
   }
 
   try {
-    const { id } = await params;
-
-    // Obtener todas las visitas del usuario
+    // Obtener todas las visitas
     const visitas = await executeQuery<Visitas>(
-      'SELECT * FROM visitas WHERE usuario_id = ? ORDER BY fecha DESC',
-      [id]
+      'SELECT * FROM visitas ORDER BY fecha DESC',
     );
 
     return NextResponse.json({
@@ -37,7 +33,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: 'Error al obtener visitas del usuario',
+        error: 'Error al obtener visitas a las consultas',
         message: error instanceof Error ? error.message : 'Error desconocido'
       },
       { status: 500 }

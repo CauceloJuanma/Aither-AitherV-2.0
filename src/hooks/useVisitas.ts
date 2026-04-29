@@ -16,9 +16,9 @@ interface UseVisitasReturn {
 }
 
 /**
- * Hook personalizado para obtener las visitas hospitalarias de un paciente
+ * Hook personalizado para obtener las visitas hospitalarias de todos los pacientes
  */
-export function useVisitas(usuarioId: number | null): UseVisitasReturn {
+export function useVisitas(): UseVisitasReturn {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Escuchar cambios en el estado de autenticación
@@ -37,13 +37,10 @@ export function useVisitas(usuarioId: number | null): UseVisitasReturn {
     refetch,
   } = useQuery<Visita[], Error>({
     // Query key
-    queryKey: ['visitas', usuarioId],
+    queryKey: ['visitas'],
 
     // Query function
     queryFn: async () => {
-      if (!usuarioId) {
-        return [];
-      }
 
       // Esperar hasta que Firebase Auth inicialice
       let user = auth.currentUser;
@@ -59,7 +56,7 @@ export function useVisitas(usuarioId: number | null): UseVisitasReturn {
 
       const token = await user.getIdToken();
 
-      const response = await fetch(`/api/db/usuarios/${usuarioId}/visitas`, {
+      const response = await fetch(`/api/db/visitas`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -75,11 +72,14 @@ export function useVisitas(usuarioId: number | null): UseVisitasReturn {
         throw new Error(result.error || 'Error desconocido');
       }
 
-      return result.data;
+      return (result.data as Visita[]).map((v) => ({
+        ...v,
+        usuario_id: Number(v.usuario_id),
+      }));
     },
 
     // Solo ejecutar si hay ID y usuario autenticado
-    enabled: !!usuarioId && isAuthenticated,
+    enabled: isAuthenticated,
 
     // No refetch automáticamente al montar
     refetchOnMount: false,

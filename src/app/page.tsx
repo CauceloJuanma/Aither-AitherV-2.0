@@ -18,8 +18,10 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine ,
 } from 'recharts';
 import { usePacientes } from '@/hooks/usePacientes';
+import { useVisitas } from '@/hooks/useVisitas';
 
 // Paleta de colores para los pacientes
 const palette = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#60a5fa'];
@@ -189,6 +191,9 @@ export default function HomePage() {
   // Obtener datos reales de la base de datos
   const { pacientes: pacientesDB, loading, error } = usePacientes();
 
+  //Obtener tosas las visitas hospitalarias
+  const { visitas: visitasDB, loading: loadingVisitas, error: errorVisitas } = useVisitas();
+  
   // Calcular las fechas mínima y máxima disponibles en los datos
   const { minDate, maxDate } = useMemo(() => {
     if (!pacientesDB || pacientesDB.length === 0 || !pacientesDB[0].resumenData || pacientesDB[0].resumenData.length === 0) {
@@ -356,7 +361,7 @@ export default function HomePage() {
     });
     return combined;
   }, [pacientesList, selectedPatients, fechas]);
-
+  
   const getEstadoColor = (estado: string) => {
     switch(estado) {
       case 'estable': return 'bg-green-100 text-green-800 border-green-300';
@@ -374,6 +379,20 @@ export default function HomePage() {
       router.push('/detalle');
     }
   };
+  const visitasSeleccionadas = useMemo(() => {
+    if (!visitasDB) return [];
+
+    return visitasDB.filter(v =>
+      selectedPatients.includes(v.usuario_id)
+    );
+  }, [visitasDB, selectedPatients]);
+
+  const visitasFormateadas = useMemo(() => {
+    return visitasSeleccionadas.map(v => ({
+      ...v,
+      fechaShort: formatDateShort(v.fecha)
+    }));
+  }, [visitasSeleccionadas]);
 
   // Mostrar loading state
   if (loading) {
@@ -686,6 +705,15 @@ export default function HomePage() {
                         stroke={p.color}
                         dot={{ r: 3 }}
                         name={`${p.idDisplay} ${p.nombre.split(' ')[0]}`}
+                      />
+                    ))}
+                    {visitasFormateadas.map((v, i) => (
+                      <ReferenceLine
+                        key={i}
+                        x={v.fechaShort}
+                        stroke="red"
+                        strokeDasharray="3 3"
+                        label={{ value: "Visita", position: "top", fill: "red" }}
                       />
                     ))}
                   </LineChart>

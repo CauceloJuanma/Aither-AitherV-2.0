@@ -72,7 +72,8 @@ export interface ChartCardProps {
    * Reference lines (thresholds)
    */
   referenceLines?: Array<{
-    y: number;
+    y?: number;
+    x?: string;
     label: string;
     stroke?: string;
     strokeDasharray?: string;
@@ -184,6 +185,7 @@ export function ChartCard({
               {referenceLines.map((refLine, idx) => (
                 <ReferenceLine
                   key={idx}
+                  x={refLine.x}
                   y={refLine.y}
                   stroke={refLine.stroke || '#ef4444'}
                   strokeDasharray={refLine.strokeDasharray || '3 3'}
@@ -212,6 +214,7 @@ export function ChartCard({
               {referenceLines.map((refLine, idx) => (
                 <ReferenceLine
                   key={idx}
+                  x={refLine.x}
                   y={refLine.y}
                   stroke={refLine.stroke || '#ef4444'}
                   strokeDasharray={refLine.strokeDasharray || '5 5'}

@@ -67,6 +67,11 @@ export interface ActivityTabProps {
    * Average HRV daily RMSSD
    */
   avgHRVdailyRmssd: number;
+
+  /**
+   * Formatted visits data for reference lines in charts
+   */
+  visitasSeleccionadas: { fecha: string;}[];
 }
 
 /**
@@ -89,6 +94,7 @@ export interface ActivityTabProps {
  * />
  * ```
  */
+
 export function ActivityTab({
   activityData,
   sleepData,
@@ -98,6 +104,7 @@ export function ActivityTab({
   avgSpo2Actividad,
   avgRestingHeartRate,
   avgHRVdailyRmssd,
+  visitasSeleccionadas,
 }: ActivityTabProps) {
   return (
     <div className="space-y-4">
@@ -170,6 +177,12 @@ export function ActivityTab({
             strokeDasharray: '5 5',
             label: 'Meta: 10,000 pasos',
           },
+          ...visitasSeleccionadas.map((v) => ({
+              x: v.fecha,  
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })),
         ]}
         height={300}
         emptyMessage="Sin datos de pasos disponibles"
@@ -187,6 +200,12 @@ export function ActivityTab({
           { dataKey: 'ligeros', name: 'Ligeros', fill: '#fbbf24', stackId: 'a' },
           { dataKey: 'inactivos', name: 'Inactivos (Reposo)', fill: '#94a3b8', stackId: 'a' },
         ]}
+        referenceLines={visitasSeleccionadas.map((v) => ({
+          x: v.fecha,
+          stroke: 'red',
+          strokeDasharray: '3 3',
+          label: '',
+        }))}
         height={300}
         emptyMessage="Sin datos de actividad disponibles"
         emptyIcon="🏃"
@@ -217,6 +236,12 @@ export function ActivityTab({
               strokeDasharray: '3 3',
               label: `Promedio: ${formatChartNumber(avgRestingHeartRate)}`,
             },
+            ...visitasSeleccionadas.map((v) => ({
+              x: v.fecha,  
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })),
           ]}
           height={250}
           tooltipFormatter={createFormatterWithUnit('bpm')}
@@ -247,6 +272,12 @@ export function ActivityTab({
               strokeDasharray: '3 3',
               label: `Promedio: ${formatChartNumber(avgHRVdailyRmssd)}`,
             },
+            ...visitasSeleccionadas.map((v) => ({
+              x: v.fecha, 
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })),
           ]}
           height={250}
           tooltipFormatter={createFormatterWithUnit('ms')}

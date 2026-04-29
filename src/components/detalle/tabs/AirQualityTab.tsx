@@ -15,6 +15,7 @@ export interface AirQualityTabProps {
    * Air quality data array
    */
   data: AirQualityData[];
+  visitasSeleccionadas: { fecha: string; }[]; // Added to display reference lines for selected visits
 }
 
 /**
@@ -29,7 +30,7 @@ export interface AirQualityTabProps {
  * <AirQualityTab data={calidadAire1Data} />
  * ```
  */
-export function AirQualityTab({ data }: AirQualityTabProps) {
+export function AirQualityTab({ data, visitasSeleccionadas }: AirQualityTabProps) {
   // Calculate metrics using service
   const avgPM1 = calculateAverage(data, 'pm1');
   const avgPM25 = calculateAverage(data, 'pm25');
@@ -84,7 +85,17 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
         chartType="line"
         series={[{ dataKey: 'pm25', name: 'PM2.5 (µg/m³)', stroke: '#8b5cf6', strokeWidth: 2 }]}
         yAxisDomain={CHART_DOMAINS.PM25}
-        referenceLines={[{ y: AIR_QUALITY_LIMITS.PM25, label: 'Límite' }]}
+        referenceLines={[
+          { 
+            y: AIR_QUALITY_LIMITS.PM25, label: 'Límite' 
+          },
+          ...visitasSeleccionadas.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })),
+      ]}
         emptyMessage="Sin datos de calidad del aire disponibles"
         emptyIcon="🌬️"
       />
@@ -98,7 +109,17 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
           chartType="line"
           series={[{ dataKey: 'co2', name: 'CO2 (ppm)', stroke: '#06b6d4', strokeWidth: 2 }]}
           yAxisDomain={CHART_DOMAINS.CO2}
-          referenceLines={[{ y: AIR_QUALITY_LIMITS.CO2, label: 'Límite' }]}
+          referenceLines={[
+            { 
+              y: AIR_QUALITY_LIMITS.CO2, label: 'Límite' 
+            },
+            ...visitasSeleccionadas.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })),
+          ]}
           emptyIcon="💨"
         />
 
@@ -109,7 +130,15 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
           chartType="line"
           series={[{ dataKey: 'voc', name: 'VOC (ppb)', stroke: '#f59e0b', strokeWidth: 2 }]}
           yAxisDomain={CHART_DOMAINS.VOC}
-          referenceLines={[{ y: AIR_QUALITY_LIMITS.VOC, label: 'Límite' }]}
+          referenceLines={[
+            { y: AIR_QUALITY_LIMITS.VOC, label: 'Límite' },
+            ...visitasSeleccionadas.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+            })),
+          ]}
           emptyIcon="⚗️"
         />
       </div>
@@ -193,7 +222,15 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
             chartType="line"
             series={[{ dataKey: 'pm10', name: 'PM10 (µg/m³)', stroke: '#ec4899', strokeWidth: 2 }]}
             yAxisDomain={CHART_DOMAINS.PM10}
-            referenceLines={[{ y: AIR_QUALITY_LIMITS.PM10, label: 'Límite' }]}
+            referenceLines={[
+              { y: AIR_QUALITY_LIMITS.PM10, label: 'Límite' },
+              ...visitasSeleccionadas.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+              })),
+            ]}
           />
 
           {/* Temperature and Humidity Charts */}
@@ -204,6 +241,12 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
               chartType="line"
               series={[{ dataKey: 'temperatura', name: 'Temperatura (°C)', stroke: '#f59e0b', strokeWidth: 2 }]}
               emptyIcon="🌡️"
+              referenceLines={[...visitasSeleccionadas.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+              }))]}
             />
 
             <ChartCard
@@ -212,6 +255,12 @@ export function AirQualityTab({ data }: AirQualityTabProps) {
               chartType="line"
               series={[{ dataKey: 'humedad', name: 'Humedad (%)', stroke: '#06b6d4', strokeWidth: 2 }]}
               emptyIcon="💧"
+              referenceLines={[...visitasSeleccionadas.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+              }))]}
             />
           </div>
         </>

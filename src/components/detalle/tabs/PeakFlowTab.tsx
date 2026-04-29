@@ -26,6 +26,11 @@ export interface PeakFlowTabProps {
    * Best historical daily average
    */
   bestValue: number;
+
+  /**
+   * Selected visits to show reference lines on charts
+   */
+  visitasSeleccionadas: { fecha: string }[];
 }
 
 /**
@@ -44,7 +49,7 @@ export interface PeakFlowTabProps {
  * />
  * ```
  */
-export function PeakFlowTab({ data, avgPeakFlow, latestAverage, bestValue }: PeakFlowTabProps) {
+export function PeakFlowTab({ data, avgPeakFlow, latestAverage, bestValue, visitasSeleccionadas }: PeakFlowTabProps) {
   return (
     <div className="space-y-4">
       {/* Description Card */}
@@ -115,6 +120,12 @@ export function PeakFlowTab({ data, avgPeakFlow, latestAverage, bestValue }: Pea
         height={350}
         emptyMessage="Sin datos de pico de flujo disponibles"
         emptyIcon="🫁"
+        referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
       />
     </div>
   );

@@ -67,6 +67,11 @@ export interface SleepTabProps {
    * Average time in bed (hours)
    */
   avgTimeInBed: number;
+
+    /**
+     * Selected visits to show reference lines on charts
+     */
+    visitasSeleccionadas: { fecha: string }[];
 }
 
 /**
@@ -98,6 +103,7 @@ export function SleepTab({
   avgFrecuenciaCardiacaSueno,
   avgTasaRespiratoria,
   avgTimeInBed,
+  visitasSeleccionadas,
 }: SleepTabProps) {
   // Calculate average awakenings
   const avgDespertares =
@@ -215,6 +221,12 @@ export function SleepTab({
         referenceLines={[
           { y: 7, stroke: '#10b981', strokeDasharray: '5 5', label: 'Mínimo: 7h' },
           { y: 9, stroke: '#f59e0b', strokeDasharray: '5 5', label: 'Máximo: 9h' },
+          ...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || []),
         ]}
         height={300}
         emptyMessage="Sin datos de sueño disponibles"
@@ -229,7 +241,13 @@ export function SleepTab({
         chartType="line"
         series={[{ dataKey: 'eficiencia', name: 'Eficiencia %', stroke: '#3b82f6', strokeWidth: 2 }]}
         yAxisDomain={[0, 100]}
-        referenceLines={[{ y: 85, stroke: '#10b981', strokeDasharray: '5 5', label: 'Meta: 85%' }]}
+        referenceLines={[{ y: 85, stroke: '#10b981', strokeDasharray: '5 5', label: 'Meta: 85%' },
+          ...(visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+          })) || [])]}
         height={300}
         emptyMessage="Sin datos de eficiencia disponibles"
         emptyIcon="📊"
@@ -251,6 +269,12 @@ export function SleepTab({
         tooltipFormatter={createFormatterWithUnit('h')}
         emptyMessage="Sin datos de fases del sueño"
         emptyIcon="🌙"
+        referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
       />
 
       {/* Time in Bed and Awakenings Grid */}
@@ -262,8 +286,13 @@ export function SleepTab({
           chartType="bar"
           series={[{ dataKey: 'timeInBed', name: 'Tiempo en Cama', fill: '#6366f1' }]}
           yAxisDomain={[0, 12]}
-          referenceLines={[{ y: 8, stroke: '#10b981', strokeDasharray: '5 5', label: 'Recomendado: 8h' }]}
-          height={250}
+          referenceLines={[{ y: 8, stroke: '#10b981', strokeDasharray: '5 5', label: 'Recomendado: 8h' },
+            ...(visitasSeleccionadas?.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+            })) || [])]}
           tooltipFormatter={createFormatterWithUnit('h')}
           emptyMessage="Sin datos de tiempo en cama"
           emptyIcon="🛏️"
@@ -278,6 +307,12 @@ export function SleepTab({
           height={250}
           emptyMessage="Sin datos de despertares"
           emptyIcon="⏰"
+          referenceLines={[...(visitasSeleccionadas?.map((v) => ({
+            x: v.fecha,
+            stroke: 'red',
+            strokeDasharray: '3 3',
+            label: '',
+          })) || [])]}
         />
       </div>
 
@@ -305,7 +340,14 @@ export function SleepTab({
           },
         ]}
         yAxisDomain={[85, 100]}
-        referenceLines={[{ y: 95, stroke: '#ef4444', strokeDasharray: '5 5', label: 'Límite: 95%' }]}
+        referenceLines={[{ y: 95, stroke: '#ef4444', strokeDasharray: '5 5', label: 'Límite: 95%' },
+          ...(visitasSeleccionadas?.map((v) => ({
+              x: v.fecha,
+              stroke: 'red',
+              strokeDasharray: '3 3',
+              label: '',
+          })) || [])
+        ]}
         height={300}
         tooltipFormatter={createFormatterWithUnit('%')}
         emptyMessage="Sin datos de SpO2 nocturna"
@@ -321,7 +363,13 @@ export function SleepTab({
           chartType="line"
           series={[{ dataKey: 'HRVdeepRmssd', name: 'HRV Sueño Profundo', stroke: '#8b5cf6', strokeWidth: 2 }]}
           yAxisDomain={[0, 100]}
-          referenceLines={[{ y: 50, stroke: '#3b82f6', strokeDasharray: '5 5', label: 'Normal: >50ms' }]}
+          referenceLines={[{ y: 50, stroke: '#3b82f6', strokeDasharray: '5 5', label: 'Normal: >50ms' },
+            ...(visitasSeleccionadas?.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+            })) || [])]}
           height={250}
           emptyMessage="Sin datos de HRV"
           emptyIcon="💓"
@@ -337,6 +385,12 @@ export function SleepTab({
           referenceLines={[
             { y: 12, stroke: '#10b981', strokeDasharray: '5 5', label: 'Rango normal' },
             { y: 18, stroke: '#f59e0b', strokeDasharray: '5 5', label: '' },
+            ...(visitasSeleccionadas?.map((v) => ({
+                x: v.fecha,
+                stroke: 'red',
+                strokeDasharray: '3 3',
+                label: '',
+            })) || []),
           ]}
           height={250}
           emptyMessage="Sin datos de respiración"

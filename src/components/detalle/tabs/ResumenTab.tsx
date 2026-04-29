@@ -37,6 +37,7 @@ interface ResumenTabProps {
   avgBreathingRate: number;
   avgHRVdailyRmssd: number;
   cuestionarioHistorico: Record<string, unknown>[];
+  visitasSeleccionadas: { fecha: string; }[];
 }
 
 export default function ResumenTab({
@@ -59,6 +60,7 @@ export default function ResumenTab({
   avgBreathingRate,
   avgHRVdailyRmssd,
   cuestionarioHistorico,
+  visitasSeleccionadas
 }: ResumenTabProps) {
   // Calcular promedio de disnea del cuestionario
   const avgDisnea = cuestionarioHistorico.length > 0
@@ -440,6 +442,9 @@ export default function ResumenTab({
                 <Tooltip />
                 <Legend />
                 <ReferenceLine y={95} stroke="#ef4444" strokeDasharray="3 3" label="Mínimo" />
+                {visitasSeleccionadas.map((v) => (
+                  <ReferenceLine x={v.fecha} stroke="red" strokeDasharray="3 3" label="" />
+                ))}
                 <Line type="monotone" dataKey="spo2" stroke="#10b981" strokeWidth={2} name="SpO2 %" />
               </LineChart>
             </ResponsiveContainer>
@@ -462,6 +467,9 @@ export default function ResumenTab({
                 <Legend />
                 <ReferenceLine y={350} stroke="#f59e0b" strokeDasharray="3 3" label="Mínimo" />
                 <Line type="monotone" dataKey="toma1" stroke="#3b82f6" strokeWidth={2} name="PEF (L/min)" />
+                {visitasSeleccionadas.map((v) => (
+                  <ReferenceLine x={v.fecha} stroke="red" strokeDasharray="3 3" label="" />
+                ))}
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -483,6 +491,9 @@ export default function ResumenTab({
               <Tooltip />
               <Legend />
               <ReferenceLine y={10000} stroke="#f59e0b" strokeDasharray="5 5" label="Meta: 10,000 pasos" />
+              {visitasSeleccionadas.map((v) => (
+                  <ReferenceLine x={v.fecha} stroke="red" strokeDasharray="3 3" label="" />
+                ))}
               <Bar dataKey="pasos" fill="#3b82f6" name="Pasos" />
             </BarChart>
           </ResponsiveContainer>
