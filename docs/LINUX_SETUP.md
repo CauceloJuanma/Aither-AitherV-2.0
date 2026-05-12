@@ -48,7 +48,7 @@ sudo do-release-upgrade
 ```bash
 npx ngrok http 3000
 ```
-##### 2. Configuración de cuenta, regístrate en la web de ngrok y copia tu token:
+##### 2. Configuración de cuenta, regístrate en la web de ngrok y copia tu token
 ```
 ngrok config add-authtoken TU_TOKEN
 ```
@@ -56,7 +56,7 @@ ngrok config add-authtoken TU_TOKEN
 ```bash
 ngrok http PUERTO_DONDE_CORRA_TU_APP
 ```
-##### 4. Acceder a app desde otro dispositivo (ngrok te dará una URL de este estilo):
+##### 4. Acceder a app desde otro dispositivo (ngrok te dará una URL de este estilo)
 ```bash
 https://abc123.ngrok.io
 ```
@@ -72,7 +72,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 ```bash
 sudo tailscape up
 ```
-Te proporciona una URl, ábrela en el navehador y logueate con una cuenta de Google
+Te proporciona una URl, ábrela en el navegador y logueate con una cuenta de Google
 
 ##### 2 En Windows
 ###### 1.1 Descargar herramienta
@@ -138,7 +138,7 @@ server {
 }
 ```
 
-##### 4.3 Activaer servidor
+##### 4.3 Activar servidor
 ```bash
 sudo ln -s /etc/nginx/sites-available/aither /etc/nginx/sites-enabled/
 ```
@@ -166,7 +166,7 @@ tailscale ip
 ```
 Una vez realizada la instalación simplemente acceder a la url http://IP:3000 en la maquina externa
 
-**Si la máquina es Windows se debe abrir Tailscape para conectarse a la VPN, en Linux se conecta por defeco al arrancar**
+**Si la máquina es Windows se debe abrir Tailscale para conectarse a la VPN, en Linux se conecta por defeco al arrancar**
 Para comprobar conecxión en Linux:
 ```bash
 sudo systemctl status tailscaled
