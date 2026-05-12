@@ -199,3 +199,94 @@ pm2 restart aither
 
 ### 5. Comprobar actualización
 Se puede comprobar o bien en http://localhost:3000 en el propio servidor o accediendo desde la VPN de Tailscale desde otra máquina
+
+## Actualización necesaria de la base de datos
+
+Para este apartado consultar [SQLITE3_CONFIG.md](./SQLITE3_CONFIG.md).
+
+### 1. Comprobar esquema existente
+
+```bash
+sqlite3 app.db
+.tables # Tiene que mostrar la salida Actividad, Picoflujo, Usuario, CalidadAireInterior, Sleep, Visitas, Cuestionario, Sonidos, Pesaje, Telemonitorizacion 
+```
+
+### 2. Agregar nuevas tablas
+
+En caso de no existir las tablas Visitas y Sonidos deberán ser agregadas siguiendo estos pasos
+
+```bash
+cd REPOSITORIO
+sqlite3 app.db
+
+CREATE TABLE Visitas (
+id INTEGER PRIMARY KEY,
+usuario_id INTEGER NOT NULL,
+fecha TEXT NOT NULL
+);
+
+CREATE TABLE Sonidos (
+  id INTEGER PRIMARY KEY,
+  nombre_fichero_tos TEXT NOT NULL,
+  nombre_fichero_frase TEXT NOT NULL,
+  telemonitorizacion_id INTEGER NOT NULL,
+  duracion_frase REAL,
+  tasa_habla REAL,
+  pitch REAL,
+  shimmer REAL,
+  hnr REAL,
+  intensidad_promedio REAL,
+  numero_pausas REAL,
+  duracion_pausas_total REAL,
+  f0_min REAL,
+  f0_max REAL,
+  mfccs TEXT,
+  variabilidad_tono REAL,
+  variabilidad_intensidad REAL,
+  variabilidad_ritmo REAL,
+  jitter REAL,
+  tos_duracion REAL,
+  tos_energia_rms_mean REAL,
+  tos_zcr_mean REAL,
+  tos_spectral_centroid_mean REAL,
+  tos_spectral_bandwidth_mean REAL,
+  tos_f0_mean REAL,
+  tos_f0_std REAL,
+  tos_hnr REAL,
+
+  tos_mfcc_mean_1 REAL, tos_mfcc_std_1 REAL,
+  tos_mfcc_mean_2 REAL, tos_mfcc_std_2 REAL,
+  tos_mfcc_mean_3 REAL, tos_mfcc_std_3 REAL,
+  tos_mfcc_mean_4 REAL, tos_mfcc_std_4 REAL,
+  tos_mfcc_mean_5 REAL, tos_mfcc_std_5 REAL,
+  tos_mfcc_mean_6 REAL, tos_mfcc_std_6 REAL,
+  tos_mfcc_mean_7 REAL, tos_mfcc_std_7 REAL,
+  tos_mfcc_mean_8 REAL, tos_mfcc_std_8 REAL,
+  tos_mfcc_mean_9 REAL, tos_mfcc_std_9 REAL,
+  tos_mfcc_mean_10 REAL, tos_mfcc_std_10 REAL,
+  tos_mfcc_mean_11 REAL, tos_mfcc_std_11 REAL,
+  tos_mfcc_mean_12 REAL, tos_mfcc_std_12 REAL,
+  tos_mfcc_mean_13 REAL, tos_mfcc_std_13 REAL,
+
+  tos_tonnetz REAL,
+  tos_spectral_contrast REAL,
+  tos_spectral_flatness REAL,
+  tos_spectral_rolloff REAL,
+
+  FOREIGN KEY (telemonitorizacion_id) REFERENCES Telemonitorizacion(id) ON DELETE CASCADE
+);
+```
+
+### 3. Insertar datos
+```bash
+INSERT INTO visitas(...) VALUES (...);
+INSERT INTO sonidos(...) VALUES (...);
+```
+
+### 4. Verificación de funcionamiento
+
+Una vez insertados los datos la aplicación estará preparada para usarse. En caso de que no se vean reflejadas las actualizaciones en la aplicación reiniciarla usando pm2:
+
+```bash
+pm2 restart aither
+```
